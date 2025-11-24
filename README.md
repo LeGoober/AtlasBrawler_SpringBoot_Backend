@@ -106,9 +106,9 @@ spring.datasource.password=yourpassword
 
 **Celo Network** (Alfajores testnet)
 ```properties
-celo.network=alfajores
-celo.rpc.url=https://alfajores-forno.celo-testnet.org
-celo.chain.id=44787
+celo.network=sepolia
+celo.rpc.url=https://forno.celo-sepolia.celo-testnet.org
+celo.chain.id=11142220
 ```
 
 ## Getting Started
