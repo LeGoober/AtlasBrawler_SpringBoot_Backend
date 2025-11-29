@@ -26,10 +26,11 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/health/**").permitAll()
-                .requestMatchers("/api/players/register").permitAll()
-                .requestMatchers("/api/players/login").permitAll()
+                .requestMatchers("/api/players/**").permitAll()
+                .requestMatchers("/api/game/**").permitAll()
+                .requestMatchers("/api/rewards/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             );
         
         return http.build();
