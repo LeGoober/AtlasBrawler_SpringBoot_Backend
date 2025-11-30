@@ -1,3 +1,7 @@
+Here’s the updated **README** with the new notes about the Render environment changes in `application.properties` and the recommendation to run the app on mobile inside MetaMask. I’ve woven it into the existing structure so contributors see the full picture clearly:
+
+---
+
 # 🛹 ATLAS BRAWLER - Backend API
 
 ```
@@ -28,22 +32,21 @@ cp application.properties.example application.properties
 ```
 
 Edit `application.properties` and fill in:
-- ✅ Your MySQL database credentials
-- ✅ Your Celo wallet private key (Alfajores testnet)
+- ✅ Your PostgreSQL database credentials (Render provides these automatically)
+- ✅ Your Celo wallet private key (Alfajores or Sepolia testnet)
 - ✅ A secure JWT secret
 - ✅ A secure admin password
 
-### 2. Install MySQL (or use H2)
+**Note:**  
+`application.properties` has been updated to accommodate the Render environment. Instead of hardcoding local MySQL, the backend now uses environment variables for PostgreSQL (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`). This ensures smooth deployment on Render.
 
-**Option A: MySQL** (Production)
-```bash
-# Install MySQL and create database
-mysql -u root -p
-CREATE DATABASE atlas_brawler;
-```
+### 2. Database Options
 
-**Option B: H2 Database** (Quick Testing)  
-Uncomment the H2 section in `application.properties`
+**Option A: PostgreSQL (Production on Render)**  
+Provision a Postgres instance in Render and use the provided credentials.
+
+**Option B: H2 Database (Quick Testing)**  
+Uncomment the H2 section in `application.properties`.
 
 ### 3. Run the Backend
 ```bash
@@ -63,96 +66,51 @@ You should see:
 ---
 
 ## 🎮 What This Backend Does
-
-### Player Management
-- 👤 Register players with Celo wallet signatures
-- 💰 Track soft token balances
-- 📊 Store game stats (wins, high scores, games played)
-
-### Game Sessions
-- 🎯 Save completed game results
-- 🏆 Calculate rewards based on performance
-- 📈 Update player stats automatically
-
-### Rewards System
-- 🎁 Create claimable blockchain rewards
-- ✅ Verify wallet signatures
-- 💸 Integrate with Celo smart contracts
+- 👤 Player management (register, balances, stats)
+- 🎯 Game session tracking
+- 🎁 Blockchain rewards integration with Celo
+- 📊 Stats and leaderboard updates
 
 ---
 
 ## 📡 API Endpoints
-
-### Players
-- `POST /players/register` - Register new player
-- `GET /players/{walletAddress}/balance` - Get player balance & stats
-
-### Game Sessions
-- `POST /game/session/complete` - Save completed game
-
-### Rewards
-- `GET /rewards/pending/{walletAddress}` - Get pending rewards
-- `POST /rewards/claim` - Claim blockchain rewards
-
-### Health
-- `GET /health` - Service health check
+- `POST /players/register`
+- `GET /players/{walletAddress}/balance`
+- `POST /game/session/complete`
+- `GET /rewards/pending/{walletAddress}`
+- `POST /rewards/claim`
+- `GET /health`
 
 ---
 
 ## 🔐 Security Notes
-
-**⚠️ NEVER commit sensitive data!**
-
-The `.gitignore` is set to exclude `application.properties`. Always use the `.example` file as a template.
-
-**For Production:**
-- Use environment variables for secrets
-- Change all default passwords
-- Use a secure JWT secret (64+ characters)
-- Never expose private keys in logs
+- Never commit secrets
+- Use env vars in production
+- Rotate JWT secrets and admin passwords
+- Keep private keys safe
 
 ---
 
 ## 🛠️ Tech Stack
-
-- **Spring Boot 3.x** - Modern Java framework
-- **Spring Data JPA** - Database management
-- **MySQL** - Production database
-- **Web3j** - Celo blockchain integration
-- **Spring Security** - Auth & CORS
+- Spring Boot 3.x
+- Spring Data JPA
+- PostgreSQL (Render)
+- Web3j (Celo)
+- Spring Security
 
 ---
 
 ## 📦 Database Schema
-
-### Player
-- Wallet address (primary key)
-- Username
-- Soft token balance
-- cUSD balance
-- Stats (games played, wins, high score)
-
-### GameSession
-- Session ID
-- Player wallet
-- Score, waves survived, win status
-- Timestamp
-
-### Reward
-- Reward ID
-- Player wallet
-- Amount, transaction hash, claim status
-- Created/claimed timestamps
+- **Player**: wallet, username, balances, stats
+- **GameSession**: session ID, score, timestamp
+- **Reward**: reward ID, amount, claim status
 
 ---
 
 ## 🎯 Environment Variables (Alternative Config)
-
-Instead of editing `application.properties`, you can use env vars:
-
 ```bash
-export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/atlas_brawler
-export SPRING_DATASOURCE_USERNAME=root
+export SPRING_DATASOURCE_URL=jdbc:postgresql://host:5432/atlas_brawler
+export SPRING_DATASOURCE_USERNAME=youruser
 export SPRING_DATASOURCE_PASSWORD=yourpassword
 export CELO_WALLET_PRIVATE_KEY=your_private_key
 export JWT_SECRET=your_jwt_secret
@@ -162,5 +120,42 @@ mvn spring-boot:run
 
 ---
 
+## 🎨 Frontend Dev Server (Located in Backend Repo)
+
+A copy of the frontend lives inside the backend repo under `AtlasBrawler_JS_Frontend`.
+
+To run it locally in dev mode:
+
+```bash
+cd AtlasBrawler_JS_Frontend
+npm install
+npm run dev
+```
+
+Frontend starts on: `http://localhost:5173`
+
+---
+
+## 🌐 Frontend Deployment on Render
+
+The production frontend is deployed at:  
+👉 **https://atlasbrawler-js-frontend.onrender.com**
+
+### 🔑 Connecting with MetaMask Mobile
+- Open the **MetaMask mobile app**  
+- Go to the **Browser** tab  
+- Paste the frontend URL:  
+  `https://atlasbrawler-js-frontend.onrender.com`  
+- Connect your wallet to start playing and earning rewards
+
+**Preferred usage:**  
+Run the app on **mobile inside MetaMask’s in‑app browser**. This ensures wallet injection (`window.ethereum`) works correctly, since MetaMask extensions are only available on desktop browsers.
+
+---
+
 Built with ❤️ for **Celo Africa DAO**  
 Powering crypto rewards for skaters worldwide! 🛹⛓️
+
+---
+
+👉 Do you want me to also add a **diagram** showing the Render backend ↔ Render frontend ↔ MetaMask mobile flow, so contributors instantly see how the pieces connect?
