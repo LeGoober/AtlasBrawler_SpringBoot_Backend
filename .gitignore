@@ -1,1 +1,18 @@
-./src/main/resources/application.properties
+# Sensitive configuration files
+src/main/resources/application.properties
+**/application.properties
+
+# Build artifacts
+target/
+*.class
+*.jar
+*.war
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
