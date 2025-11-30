@@ -1,5 +1,3 @@
-Here’s the updated **README** with the new notes about the Render environment changes in `application.properties` and the recommendation to run the app on mobile inside MetaMask. I’ve woven it into the existing structure so contributors see the full picture clearly:
-
 ---
 
 # 🛹 ATLAS BRAWLER - Backend API
