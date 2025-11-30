@@ -1,0 +1,8 @@
+target/
+.git/
+.vscode/
+*.md
+.env
+.gitignore
+AtlasBrawler_JS_Frontend/
+node_modules/
