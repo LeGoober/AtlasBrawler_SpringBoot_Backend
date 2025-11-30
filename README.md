@@ -157,5 +157,3 @@ Built with ❤️ for **Celo Africa DAO**
 Powering crypto rewards for skaters worldwide! 🛹⛓️
 
 ---
-
-👉 Do you want me to also add a **diagram** showing the Render backend ↔ Render frontend ↔ MetaMask mobile flow, so contributors instantly see how the pieces connect?
