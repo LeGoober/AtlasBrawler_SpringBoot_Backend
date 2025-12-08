@@ -82,9 +82,17 @@ public class Player {
     public void addSoftTokens(BigDecimal amount) {
         this.softTokenBalance = this.softTokenBalance.add(amount);
     }
-    
+
     public void deductSoftTokens(BigDecimal amount) {
         this.softTokenBalance = this.softTokenBalance.subtract(amount);
+    }
+
+    public void addCUSDBalance(BigDecimal amount) {
+        this.cUSDBalance = this.cUSDBalance.add(amount);
+    }
+
+    public void deductCUSDBalance(BigDecimal amount) {
+        this.cUSDBalance = this.cUSDBalance.subtract(amount);
     }
     
     public void incrementGamesPlayed() {

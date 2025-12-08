@@ -93,6 +93,14 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    @Transactional
+    public void addCUSDBalance(String walletAddress, BigDecimal amount) {
+        Player player = playerRepository.findByWalletAddress(walletAddress)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+        player.addCUSDBalance(amount);
+        playerRepository.save(player);
+    }
+
     private PlayerResponse mapToResponse(Player player) {
         return PlayerResponse.builder()
                 .id(player.getId())
