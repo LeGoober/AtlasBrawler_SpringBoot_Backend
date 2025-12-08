@@ -12,6 +12,9 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.Sign;
 import org.web3j.crypto.Keys;
 import org.web3j.crypto.TransactionEncoder;
+import org.web3j.crypto.SignedRawTransaction;
+import org.web3j.crypto.Hash;
+import org.web3j.crypto.ECDSASignature;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -23,6 +26,7 @@ import org.web3j.utils.Convert;
 import org.web3j.utils.Numeric;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Service
 public class BlockchainService {
@@ -100,9 +104,12 @@ public class BlockchainService {
                 throw new IllegalArgumentException("Invalid signed transaction");
             }
 
-            // For signed transactions, we need to recover the sender
-            // Web3j can help with this, but for simplicity, we'll assume the signed tx is valid
-            // and send it directly. In production, add proper verification.
+            if (!(rawTx instanceof SignedRawTransaction)) {
+                throw new IllegalArgumentException("Transaction is not signed");
+            }
+
+            SignedRawTransaction signedTx = (SignedRawTransaction) rawTx;
+            Sign.SignatureData signatureData = signedTx.getSignatureData();
 
             // Send the signed transaction
             EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(request.getSignedTransaction()).send();
@@ -132,9 +139,36 @@ public class BlockchainService {
             }
 
             // Recover signer address from signature (CRITICAL for security)
-            byte[] signedData = Numeric.hexStringToByteArray(request.getSignedTransaction());
-            org.web3j.crypto.Sign.SignatureData signatureData = org.web3j.crypto.Sign.signedMessageToKey(org.web3j.crypto.TransactionEncoder.getRawTransactionData(rawTx), signedData).getSignatureData();
-            String recoveredAddress = "0x" + org.web3j.crypto.Keys.getAddress(org.web3j.crypto.Sign.recoverFromSignature(rawTx.getNonce().longValue(), rawTx.getGasPrice(), rawTx.getGasLimit(), rawTx.getTo() == null ? "" : rawTx.getTo(), rawTx.getValue(), signatureData));
+            byte[] encoded = TransactionEncoder.encode(rawTx);
+            byte[] messageHash = Hash.sha3(encoded);
+
+            // Calculate header from v (byte[])
+            int header = 0;
+            for (byte b : signatureData.getV()) {
+                header = (header << 8) + (b & 0xFF);
+            }
+
+            int recId;
+            if (header == 27 || header == 28) {
+                recId = header - 27;
+            } else if (header >= 35) {
+                recId = (header - 35) % 2;
+            } else {
+                throw new IllegalArgumentException("Invalid v value in signature");
+            }
+
+            ECDSASignature sig = new ECDSASignature(
+                    new BigInteger(1, signatureData.getR()),
+                    new BigInteger(1, signatureData.getS())
+            );
+
+            BigInteger key = Sign.recoverFromSignature(recId, sig, messageHash);
+            if (key == null) {
+                throw new RuntimeException("Could not recover public key from signature");
+            }
+
+            String recoveredAddress = "0x" + Keys.getAddress(key);
+
             if (!recoveredAddress.equalsIgnoreCase(request.getWalletAddress())) {
                 throw new SecurityException("Signature verification failed: signer does not match wallet");
             }
