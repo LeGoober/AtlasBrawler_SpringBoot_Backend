@@ -18,10 +18,17 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
 spring.jpa.properties.hibernate.format_sql=true
 
 # Celo Blockchain Configuration
-celo.network=alfajores
-celo.rpc.url=https://alfajores-forno.celo-testnet.org
-celo.chain.id=44787
-celo.wallet.private.key=YOUR_PRIVATE_KEY_HERE
+# MAINNET (Production)
+celo.network=mainnet
+celo.rpc.url=https://forno.celo.org
+celo.chain.id=42220
+celo.wallet.private.key=YOUR_MAINNET_PRIVATE_KEY_HERE
+
+# TESTNET (Development) - Uncomment for testing
+#celo.network=alfajores
+#celo.rpc.url=https://alfajores-forno.celo-testnet.org
+#celo.chain.id=44787
+#celo.wallet.private.key=YOUR_TESTNET_PRIVATE_KEY_HERE
 
 # Contract Addresses (Update after deployment)
 celo.contract.reward.address=

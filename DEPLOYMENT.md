@@ -9,9 +9,13 @@
 
 ## 📦 What You're Deploying
 
-- **Frontend**: React PWA (mobile-ready)
-- **Backend**: Spring Boot API + MySQL
-- **Blockchain**: Celo Alfajores Testnet
+- **Frontend**: React PWA (mobile-ready) 
+- **Backend**: Spring Boot API + PostgreSQL
+- **Blockchain**: **Celo Mainnet** (Chain ID: 42220)
+
+**🏆 HackersDAO Winner:** This project placed in the top 30 at the Celo Africa DAO Hackathon!
+
+**📚 For detailed mainnet migration instructions, see [MAINNET_MIGRATION.md](MAINNET_MIGRATION.md)**
 
 ---
 
@@ -40,14 +44,22 @@ git push -u origin main
 - **Start Command**: `java -jar target/atlas-brawler-0.0.1-SNAPSHOT.jar`
 
 ### 4. Add Environment Variables
+
+**⚠️ IMPORTANT: Use MAINNET configuration**
+
 ```
-SPRING_DATASOURCE_URL=jdbc:mysql://YOUR_DB_HOST:3306/atlas_brawler
+SPRING_DATASOURCE_URL=jdbc:postgresql://YOUR_DB_HOST:5432/atlas_brawler
 SPRING_DATASOURCE_USERNAME=your_username
 SPRING_DATASOURCE_PASSWORD=your_password
-CELO_WALLET_PRIVATE_KEY=your_private_key
+CELO_WALLET_PRIVATE_KEY=your_mainnet_private_key
 JWT_SECRET=your_super_secret_key
 SPRING_PROFILES_ACTIVE=production
 ```
+
+**🔐 Security Notes:**
+- Use a **NEW mainnet wallet** (never reuse testnet keys)
+- Ensure wallet has **0.5-1 CELO** minimum for gas fees
+- Store private keys securely (password manager, encrypted vault)
 
 ### 5. Deploy
 Click **Create Web Service** and wait for build to complete.
@@ -123,15 +135,15 @@ After deployment, users can:
 
 ---
 
-## 🗄️ Database Setup (MySQL)
+## 🗄️ Database Setup (PostgreSQL)
 
-### Option 1: Render MySQL (Recommended)
-1. Create **MySQL** instance on Render
-2. Copy connection string
+### Option 1: Render PostgreSQL (Recommended)
+1. Create **PostgreSQL** instance on Render
+2. Copy connection string from Render dashboard
 3. Add to backend environment variables
 
-### Option 2: External DB (Railway, PlanetScale)
-1. Create database on your provider
+### Option 2: External DB (Railway, Supabase, Neon)
+1. Create PostgreSQL database on your provider
 2. Get connection string
 3. Add to backend environment variables
 
@@ -141,9 +153,13 @@ After deployment, users can:
 
 - [ ] Backend health check passes: `/api/health`
 - [ ] Frontend loads and connects to backend
-- [ ] Wallet connection works (Celo testnet)
+- [ ] Wallet connection works (**Celo Mainnet** - Chain ID: 42220)
+- [ ] Network switching prompts correctly for mainnet
 - [ ] Game sessions save properly
+- [ ] Rewards claim with real gas fees
+- [ ] Transactions visible on [Celoscan](https://celoscan.io/)
 - [ ] PWA install prompt appears on mobile
+- [ ] MiniPay integration works on mobile
 - [ ] Audio plays correctly
 - [ ] Obstacles and physics work
 
@@ -157,9 +173,19 @@ After deployment, users can:
 - Check backend logs on Render dashboard
 
 **Database connection fails?**
-- Verify MySQL is running
-- Check database credentials
+- Verify PostgreSQL is running
+- Check database credentials in Render environment variables
 - Ensure IP whitelist includes Render IPs
+
+**Wrong network / Can't connect wallet?**
+- Verify wallet is on **Celo Mainnet (42220)**
+- Check `useWallet.ts` has correct mainnet config
+- Try manually adding Celo Mainnet in MetaMask
+
+**Transaction failures / Gas errors?**
+- Check deployment wallet has sufficient CELO
+- Verify private key is correctly set in Render env vars
+- Check transactions on [Celoscan](https://celoscan.io/)
 
 **PWA not installing?**
 - Must use HTTPS (Render provides this)
@@ -172,14 +198,39 @@ After deployment, users can:
 
 - **Backend**: 750 hours/month (sleeps after 15min idle)
 - **Frontend**: Unlimited static hosting
-- **Database**: 1GB storage (MySQL addon)
+- **Database**: 1GB storage (PostgreSQL addon)
 
 **Tip**: Backend sleeps when inactive. First request after sleep takes ~30s to wake up.
+
+**💸 Gas Costs (Celo Mainnet):**
+- Celo mainnet has very low gas fees (~$0.001-0.01 per transaction)
+- Ensure deployment wallet has minimum **0.5-1 CELO** for operations
+- Monitor wallet balance on [Celoscan](https://celoscan.io/)
 
 ---
 
 ## 🎮 Ready to Play!
 
-Share your deployed game URL with friends and let them skate to earn! 🛹💨
+Share your deployed game URL with friends and let them skate to earn **real CELO rewards**! 🛹💨
 
-Built for **Celo Africa DAO Hackathon** 🌍
+---
+
+## 🏆 Hackathon Submission
+
+**For HackersDAO prize winners deploying to mainnet:**
+
+1. ✅ Deploy backend with mainnet configuration
+2. ✅ Deploy frontend with mainnet wallet config
+3. ✅ Test everything works on Celo Mainnet
+4. ✅ Submit to [Karma Gap](https://www.karmahq.xyz/)
+5. ✅ Reply to organizers with:
+   - Mainnet deployment confirmation
+   - Public URL
+   - Karma Gap submission link
+
+**See [MAINNET_MIGRATION.md](MAINNET_MIGRATION.md) for detailed migration guide.**
+
+---
+
+Built for **Celo Africa DAO Hackathon** 🌍  
+**🏆 Top 30 Winner** 🎉

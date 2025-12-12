@@ -28,9 +28,12 @@ cp application.properties.example application.properties
 
 Edit `application.properties` and fill in:
 - ✅ Your PostgreSQL database credentials (Render provides these automatically)
-- ✅ Your Celo wallet private key (Alfajores or Sepolia testnet)
+- ✅ Your Celo wallet private key (**MAINNET for production**, testnet for development)
 - ✅ A secure JWT secret
 - ✅ A secure admin password
+
+**🌐 MAINNET DEPLOYMENT:**
+The project is now configured for **Celo Mainnet** (Chain ID: 42220). See [MAINNET_MIGRATION.md](MAINNET_MIGRATION.md) for complete deployment guide.
 
 **Note:**  
 `application.properties` has been updated to accommodate the Render environment. Instead of hardcoding local MySQL, the backend now uses environment variables for PostgreSQL (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`). This ensures smooth deployment on Render.
@@ -63,8 +66,9 @@ You should see:
 ## 🎮 What This Backend Does
 - 👤 Player management (register, balances, stats)
 - 🎯 Game session tracking
-- 🎁 Blockchain rewards integration with Celo
+- 🎁 Blockchain rewards integration with **Celo Mainnet** 
 - 📊 Stats and leaderboard updates
+- 💳 MiniPay wallet integration for mobile users
 
 ---
 
@@ -145,6 +149,16 @@ The production frontend is deployed at:
 
 **Preferred usage:**  
 Run the app on **mobile inside MetaMask’s in‑app browser**. This ensures wallet injection (`window.ethereum`) works correctly, since MetaMask extensions are only available on desktop browsers.
+
+---
+
+---
+
+## 🏆 HackersDAO Top 30 Winner
+
+Atlas Brawler placed in the **top 30 projects** at the Celo Africa DAO Hackathon! 
+
+**📚 Deployment Guide:** [MAINNET_MIGRATION.md](MAINNET_MIGRATION.md)
 
 ---
 
